@@ -4,6 +4,8 @@ import com.cy.store.entity.User;
 import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.IUserService;
 import com.cy.store.service.ex.InsertException;
+import com.cy.store.service.ex.PasswordNotMatchException;
+import com.cy.store.service.ex.UserNotFoundException;
 import com.cy.store.service.ex.UsernameDuplicatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +56,46 @@ public class UserServiceImpl implements IUserService {
         if (rows != 1){
             throw new InsertException("在用户注册过程中产生了未知的异常");
         }
+
+    }
+
+    /**
+     * 用户登录
+     * @param username 用户名
+     * @param password 密码
+     * @return 当前匹配的用户数据，如果没有返回null
+     */
+    @Override
+    public User login(String username, String password) {
+        // 查询用户名是否存在
+        User user = userMapper.findByUsername(username);
+        if (user == null){
+            throw new UserNotFoundException("用户名不存在");
+        }
+        // 检测密码是否正确
+        // 1.获取到数据库中加密之后的密码
+        String pwd = user.getPassword();
+        // 2.获取数据库中的盐值
+        String salt = user.getSalt();
+        // 3.使用md5加密密码
+        String md5Password = getMD5Password(password, salt);
+        // 判断密码是否正确
+        if (!pwd.equals(md5Password)){
+            throw new PasswordNotMatchException("密码错误");
+        }
+
+        // 判断is_delete字段的值是否为1，表示被删除
+        if (user.getIsDelete() == 1){
+            throw new UserNotFoundException("用户已经被删除");
+        }
+
+        // 提升系统的性能
+        User result = new User();
+        result.setUsername(user.getUsername());
+        result.setPassword(user.getPassword());
+        result.setAvatar(user.getAvatar());
+
+        return result;
 
     }
 

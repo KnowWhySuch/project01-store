@@ -21,4 +21,7 @@ public interface UserMapper {
      * @return 如果找到对应的user返回user数据，反之，返回null
      */
     User findByUsername(String username);
+
+
+
 }

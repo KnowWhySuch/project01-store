@@ -1,6 +1,7 @@
 package com.cy.store.service;
 
 import com.cy.store.entity.User;
+import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.ex.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,11 @@ public class UserServiceTests {
             System.out.println(e.getClass().getSimpleName());
         }
 
+    }
+
+    @Test
+    public void login(){
+        User test01 = iUserService.login("test", "123");
+        System.out.println(test01);
     }
 }

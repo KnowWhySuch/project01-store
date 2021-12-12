@@ -138,6 +138,24 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+
+	<script>
+		// 1.监听注册按钮是否被点击
+		$("#btn-reg").click(function (){
+			// 2.发生ajax异步请求
+			$.post("/users/reg",$("#form-reg").serialize(),function (data){
+				if (data.state == 200){
+					alert("注册成功");
+					location.href = "login.html";
+				}else{
+					alert("注册失败");
+				}
+			});
+
+		});
+
+
+	</script>
 	</body>
 
 </html>
