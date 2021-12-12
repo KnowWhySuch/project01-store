@@ -1,6 +1,6 @@
 spring:
   datasource:
-    hikari:
-      jdbc-url: jdbc:mysql://localgost:3306/db
-      username: root
-      password: 123456-
+    url: jdbc:mysql://localhost:3306/store
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
