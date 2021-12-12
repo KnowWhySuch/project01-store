@@ -3,4 +3,4 @@ spring:
     hikari:
       jdbc-url: jdbc:mysql://localgost:3306/db
       username: root
-      password: 1234
+      password: 123456
