@@ -67,13 +67,15 @@ public class UserController extends BaseController{
     @GetMapping("/get_user_info")
     public JsonResult<User> getByUid(HttpSession session){
         User user = (User) session.getAttribute("user");
-        return new JsonResult<>(OK,user);
+        User byUid = iUserService.getByUid(user.getUid());
+        return new JsonResult<>(OK,byUid);
 
     }
 
     @PostMapping("/change_info")
     public JsonResult<Void> changeInfo(User user, HttpSession session){
-
+        User result = (User) session.getAttribute("user");
+        iUserService.changeInfo(result.getUid(),result.getUsername(),user);
         return new JsonResult<>(OK);
     }
 }

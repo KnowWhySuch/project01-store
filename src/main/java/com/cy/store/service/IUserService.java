@@ -33,13 +33,13 @@ public interface IUserService {
     void changePassword(Integer uid, String username ,String oldPassword,String newPassword);
 
 
-//    /**
-//     * 根据用户的uid获取用户的数据
-//     * @param uid 用户id
-//     * @return 用户的数据
-//     */
-//    User getByUid(Integer uid);
-//
+    /**
+     * 根据用户的uid获取用户的数据
+     * @param uid 用户id
+     * @return 用户的数据
+     */
+    User getByUid(Integer uid);
+
 
     /**
      * 修改用户信息

@@ -120,25 +120,25 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-//    /**
-//     * 根据用户的uid获取用户的数据
-//     * @param uid 用户id
-//     * @return
-//     */
-//    @Override
-//    public User getByUid(Integer uid) {
-//        User user = userMapper.findByUid(uid);
-//        if (user == null || user.getIsDelete() == 1 ){
-//            throw  new UserNotFoundException("用户数据不存在");
-//        }
-//        User result = new User();
-//        result.setUid(user.getUid());
-//        result.setUsername(user.getUsername());
-//        result.setEmail(user.getEmail());
-//        result.setGender(user.getGender());
-//        result.setPhone(user.getPhone());
-//        return result;
-//    }
+    /**
+     * 根据用户的uid获取用户的数据
+     * @param uid 用户id
+     * @return
+     */
+    @Override
+    public User getByUid(Integer uid) {
+        User user = userMapper.findByUid(uid);
+        if (user == null || user.getIsDelete() == 1 ){
+            throw  new UserNotFoundException("用户数据不存在");
+        }
+        User result = new User();
+        result.setUid(user.getUid());
+        result.setUsername(user.getUsername());
+        result.setEmail(user.getEmail());
+        result.setGender(user.getGender());
+        result.setPhone(user.getPhone());
+        return result;
+    }
 
 
     /**
