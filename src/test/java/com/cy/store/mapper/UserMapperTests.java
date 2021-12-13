@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Date;
+
 
 /**
  *
@@ -29,8 +31,34 @@ public class UserMapperTests {
     @Test
     public void findByUsername(){
 
-        User user = userMapper.findByUsername("tim");
-        System.out.println(user);
+        User user = userMapper.findByUsername("test");
 
+        System.out.println(user);
+        System.out.println(user.getCreatedUser());
+        System.out.println(user.getCreatedTime());
+        System.out.println(user.getModifiedUser());
+        System.out.println(user.getModifiedTime());
+
+    }
+
+    @Test
+    public void updatePasswordByUidTest(){
+        userMapper.updatePasswordByUid(12,"1234","管理员",new Date());
+    }
+
+    @Test
+    public void findByUidTest(){
+        User user = userMapper.findByUid(19);
+
+    }
+
+    @Test
+    public void updateInfoByUid(){
+        User user = new User();
+        user.setUid(17);
+        user.setPhone("17677351612");
+        user.setEmail("644452492@qq.com");
+        user.setGender(1);
+        userMapper.updateInfoByUid(user);
     }
 }

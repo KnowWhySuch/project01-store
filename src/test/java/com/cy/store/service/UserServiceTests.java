@@ -20,7 +20,7 @@ public class UserServiceTests {
     public void reg(){
         try {
             User user = new User();
-            user.setUsername("lisi");
+            user.setUsername("test");
             user.setPassword("123");
             iUserService.reg(user);
         }catch (ServiceException e){
@@ -34,5 +34,27 @@ public class UserServiceTests {
     public void login(){
         User test01 = iUserService.login("test", "123");
         System.out.println(test01);
+    }
+
+
+    @Test
+    public void changgePassword(){
+        iUserService.changePassword(14,"xxx","123","6666");
+    }
+
+//
+//    @Test
+//    public void getByUidTest(){
+//        System.out.println(iUserService.getByUid(19));
+//
+//    }
+
+    @Test
+    public void changeInfoTest(){
+        User user = new User();
+        user.setPhone("188888888");
+        user.setGender(1);
+        user.setEmail("168@qq.com");
+        iUserService.changeInfo(19,"test",user);
     }
 }

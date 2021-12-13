@@ -3,14 +3,12 @@ package com.cy.store.service.impl;
 import com.cy.store.entity.User;
 import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.IUserService;
-import com.cy.store.service.ex.InsertException;
-import com.cy.store.service.ex.PasswordNotMatchException;
-import com.cy.store.service.ex.UserNotFoundException;
-import com.cy.store.service.ex.UsernameDuplicatedException;
+import com.cy.store.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
@@ -69,6 +67,7 @@ public class UserServiceImpl implements IUserService {
     public User login(String username, String password) {
         // 查询用户名是否存在
         User user = userMapper.findByUsername(username);
+        System.out.println(user);
         if (user == null){
             throw new UserNotFoundException("用户名不存在");
         }
@@ -88,14 +87,80 @@ public class UserServiceImpl implements IUserService {
         if (user.getIsDelete() == 1){
             throw new UserNotFoundException("用户已经被删除");
         }
+        return user;
 
-        // 提升系统的性能
-        User result = new User();
-        result.setUsername(user.getUsername());
-        result.setPassword(user.getPassword());
-        result.setAvatar(user.getAvatar());
+    }
 
-        return result;
+    /**
+     * 修改密码
+     * @param uid 用户id
+     * @param username 用户名
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     */
+    @Override
+    public void changePassword(Integer uid, String username, String oldPassword, String newPassword) {
+        User result = userMapper.findByUid(uid);
+        if (result == null || result.getIsDelete() == 1){
+            throw  new UserNotFoundException("用户数据不存在");
+        }
+        // 原始密码和数据库中密码进行比较
+        String password = result.getPassword();
+        // 将用户输入的旧密码进行加密
+        String md5Password = getMD5Password(oldPassword, result.getSalt());
+        if (!password.equals(md5Password)){
+            throw new PasswordNotMatchException("原密码错误");
+        }
+
+        // 将用户新密码加密，并加入到数据库中
+        String newMd5Password = getMD5Password(newPassword, result.getSalt());
+        Integer integer = userMapper.updatePasswordByUid(uid, newMd5Password, username, new Date());
+        if (integer != 1){
+            throw new UpdateException("更新时发生了未知的异常");
+        }
+    }
+
+//    /**
+//     * 根据用户的uid获取用户的数据
+//     * @param uid 用户id
+//     * @return
+//     */
+//    @Override
+//    public User getByUid(Integer uid) {
+//        User user = userMapper.findByUid(uid);
+//        if (user == null || user.getIsDelete() == 1 ){
+//            throw  new UserNotFoundException("用户数据不存在");
+//        }
+//        User result = new User();
+//        result.setUid(user.getUid());
+//        result.setUsername(user.getUsername());
+//        result.setEmail(user.getEmail());
+//        result.setGender(user.getGender());
+//        result.setPhone(user.getPhone());
+//        return result;
+//    }
+
+
+    /**
+     * 更改用户信息
+     * @param uid 用户id
+     * @param username 用户名
+     * @param user 用户填写的信息
+     */
+    @Override
+    public void changeInfo(Integer uid , String username ,User user ) {
+        User result = userMapper.findByUid(uid);
+        if (result == null || result.getIsDelete() == 1 ){
+            throw  new UserNotFoundException("用户数据不存在");
+        }
+        user.setUid(uid);
+        user.setModifiedUser(username);
+        user.setModifiedTime(new Date());
+        Integer rows = userMapper.updateInfoByUid(user);
+        if (rows != 1){
+            throw new UpdateException("更新数据出现了异常");
+        }
+
 
     }
 

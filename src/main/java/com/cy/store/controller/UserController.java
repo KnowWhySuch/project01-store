@@ -1,9 +1,12 @@
 package com.cy.store.controller;
 
 import com.cy.store.entity.User;
+import com.cy.store.mapper.UserMapper;
 import com.cy.store.util.JsonResult;
 import com.cy.store.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController extends BaseController{
     @Autowired
     private IUserService iUserService;
@@ -41,6 +45,7 @@ public class UserController extends BaseController{
 
 //        优化：
         iUserService.reg(user);
+        System.out.println(user.getUid());
         return new JsonResult<>(OK);
     }
 
@@ -52,4 +57,23 @@ public class UserController extends BaseController{
         return new JsonResult<>(OK,user);
     }
 
+    @PostMapping("/change_password")
+    public JsonResult<Void>  changePassword(String oldPassword,String newPassword,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        iUserService.changePassword(user.getUid(),user.getUsername(),oldPassword,newPassword);
+        return new JsonResult<>(OK);
+    }
+
+    @GetMapping("/get_user_info")
+    public JsonResult<User> getByUid(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        return new JsonResult<>(OK,user);
+
+    }
+
+    @PostMapping("/change_info")
+    public JsonResult<Void> changeInfo(User user, HttpSession session){
+
+        return new JsonResult<>(OK);
+    }
 }

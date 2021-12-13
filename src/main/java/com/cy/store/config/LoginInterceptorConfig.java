@@ -29,13 +29,13 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
         // 配置不拦截的请求：存放在一个List集合中
         List<String> patterns = new ArrayList<>();
         patterns.add("/bootstrap3/**");
-        patterns.add("css/**");
-        patterns.add("images/**");
-        patterns.add("js/**");
-        patterns.add("web/register.html");
-        patterns.add("web/login.html");
-        patterns.add("web/index.html");
-        patterns.add("web/product.html");
+        patterns.add("/css/**");
+        patterns.add("/images/**");
+        patterns.add("/js/**");
+        patterns.add("/web/register.html");
+        patterns.add("/web/login.html");
+        patterns.add("/web/index.html");
+        patterns.add("/web/product.html");
         patterns.add("/users/reg");
         patterns.add("/users/login");
 
