@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Date;
+
 /**
  * Service层测试
  */
@@ -42,12 +44,12 @@ public class UserServiceTests {
         iUserService.changePassword(14,"xxx","123","6666");
     }
 
-//
-//    @Test
-//    public void getByUidTest(){
-//        System.out.println(iUserService.getByUid(19));
-//
-//    }
+
+    @Test
+    public void getByUidTest(){
+        System.out.println(iUserService.getByUid(19));
+
+    }
 
     @Test
     public void changeInfoTest(){
@@ -56,5 +58,10 @@ public class UserServiceTests {
         user.setGender(1);
         user.setEmail("168@qq.com");
         iUserService.changeInfo(19,"test",user);
+    }
+
+    @Test
+    public void changeAvatar(){
+        iUserService.changeAvatar(19,"/ss//dd","test");
     }
 }

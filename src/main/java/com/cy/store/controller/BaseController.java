@@ -1,5 +1,6 @@
 package com.cy.store.controller;
 
+import com.cy.store.controller.ex.*;
 import com.cy.store.service.ex.*;
 import com.cy.store.util.JsonResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +16,7 @@ public class BaseController {
     public static final int OK = 200;
 
     // 当前项目中产生了异常，被统一拦截到此方法中，这个方法此时就充当的是请求处理方法，方法的返回值直接给到前端
-    @ExceptionHandler(ServiceException.class) // 用于统一处理抛出的异常
+    @ExceptionHandler({ServiceException.class,FileUploadException.class}) // 用于统一处理抛出的异常
     public JsonResult<Void> handleException(Throwable e){
         JsonResult<Void> result = new JsonResult<>(e);
         if (e instanceof UsernameDuplicatedException){
@@ -33,6 +34,16 @@ public class BaseController {
         } else if(e instanceof UpdateException){
             result.setState(5003);
             result.setMessage("更新数据时产生了未知的异常");
+        }else if(e instanceof FileEmptyException){
+            result.setState(6000);
+        }else if(e instanceof FileSizeException){
+            result.setState(6001);
+        }else if(e instanceof FileTypeException){
+            result.setState(6002);
+        }else if(e instanceof FileStateException){
+            result.setState(6003);
+        }else if(e instanceof FileUploadIOException){
+            result.setState(6004);
         }
 
         return result;

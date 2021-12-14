@@ -67,7 +67,7 @@ public class UserServiceImpl implements IUserService {
     public User login(String username, String password) {
         // 查询用户名是否存在
         User user = userMapper.findByUsername(username);
-        System.out.println(user);
+        System.out.println(user.getAvatar());
         if (user == null){
             throw new UserNotFoundException("用户名不存在");
         }
@@ -149,10 +149,9 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public void changeInfo(Integer uid , String username ,User user ) {
-        User result = userMapper.findByUid(uid);
-        if (result == null || result.getIsDelete() == 1 ){
-            throw  new UserNotFoundException("用户数据不存在");
-        }
+        // 判断用户是否存在
+        fnCheckWhetherTheUserNameExists(uid);
+
         user.setUid(uid);
         user.setModifiedUser(username);
         user.setModifiedTime(new Date());
@@ -164,11 +163,37 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    /**
+     * 修改用户的头像
+     * @param uid 用户的id
+     * @param avatar 用户头像的路径
+     * @param username 用户的名称
+     */
+    @Override
+    public void changeAvatar(Integer uid, String avatar, String username) {
+
+        // 判断用户是否存在
+        fnCheckWhetherTheUserNameExists(uid);
+
+        Integer rows = userMapper.updateAvatarByUid(uid, avatar, username, new Date());
+        if(rows != 1){
+            throw new UpdateException("更新用户头像发生了异常");
+        }
+    }
+
     /** 定义一个md5算法的加密处理 **/
     private String getMD5Password(String password,String salt){
         for (int i = 0; i < 3; i++) {
             password = DigestUtils.md5DigestAsHex((salt + password +salt).getBytes()).toUpperCase();
         }
        return password;
+    }
+
+    /** 定义一个方法判断用户数据是否存在 **/
+    private void fnCheckWhetherTheUserNameExists(Integer uid){
+        User user = userMapper.findByUid(uid);
+        if (user == null || user.getIsDelete() == 1){
+            throw new UserNotFoundException("用户数据不存在");
+        }
     }
 }
