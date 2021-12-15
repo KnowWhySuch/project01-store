@@ -97,7 +97,6 @@ public class UserController extends BaseController{
     @PostMapping("/change_avatar")
     public JsonResult<String> changeAvatar(HttpSession session, @RequestParam("file") MultipartFile file){
 
-
         // 判断文件是否为空
         if (file.isEmpty()){
             throw new FileEmptyException("文件为空");
@@ -142,5 +141,8 @@ public class UserController extends BaseController{
         iUserService.changeAvatar(user.getUid(),avatar,user.getUsername());
         // 返回用户头像的路径给前端页面，将来用于头像展示使用
         return new JsonResult<>(OK,avatar);
+
     }
+
+
 }

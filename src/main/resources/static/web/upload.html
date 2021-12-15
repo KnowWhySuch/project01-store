@@ -244,11 +244,13 @@
 		</footer>
 		<!--页脚结束-->
 		<script type="text/javascript">
-			$(document).ready(function () {
-				// 将保存在cookie的头像地址设置到img的src属性上
-				console.log("cookie中的avatar=" + $.cookie("avatar"));
-				$("#img-avatar").attr("src", $.cookie("avatar"));
-			});
+				$(function (){
+					// 将保存在cookie的头像地址设置到img的src属性上
+					$("#img-avatar").attr("src", $.cookie("avatar"));
+
+
+				});
+
 
 			$("#btn-change-avatar").click(function() {
 				$.ajax({

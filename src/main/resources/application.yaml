@@ -24,3 +24,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+user:
+  address:
+    max-count: 20
+

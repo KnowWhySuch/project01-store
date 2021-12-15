@@ -67,7 +67,6 @@ public class UserServiceImpl implements IUserService {
     public User login(String username, String password) {
         // 查询用户名是否存在
         User user = userMapper.findByUsername(username);
-        System.out.println(user.getAvatar());
         if (user == null){
             throw new UserNotFoundException("用户名不存在");
         }
@@ -131,13 +130,8 @@ public class UserServiceImpl implements IUserService {
         if (user == null || user.getIsDelete() == 1 ){
             throw  new UserNotFoundException("用户数据不存在");
         }
-        User result = new User();
-        result.setUid(user.getUid());
-        result.setUsername(user.getUsername());
-        result.setEmail(user.getEmail());
-        result.setGender(user.getGender());
-        result.setPhone(user.getPhone());
-        return result;
+
+        return user;
     }
 
 
