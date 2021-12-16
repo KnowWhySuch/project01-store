@@ -19,8 +19,8 @@
 		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
 		<link rel="stylesheet" type="text/css" href="../css/top.css" />
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
-		<script type="text/javascript" src="../js/distpicker.data.js"></script>
-		<script type="text/javascript" src="../js/distpicker.js"></script>
+<!--		<script type="text/javascript" src="../js/distpicker.data.js"></script>-->
+<!--		<script type="text/javascript" src="../js/distpicker.js"></script>-->
 	</head>
 
 	<body>
@@ -289,10 +289,81 @@
 		<!--页脚结束-->
 
 	<script>
+		// value 属性用户表示当前的这个区域的code值
+		let defaultOPtion = "<option value='0'>---- 请选择 ----</option>>"
+		$(document).ready(function(){
+			showProvinceList();
+			$("#city-list").append(defaultOPtion);
+			$("#area-list").append(defaultOPtion);
+		});
+
+		$("#city-list").change(function (){
+			let parent = $("#city-list").val();
+
+			// 清空select下拉列表中的所有option元素
+			$("#area-list").empty();
+			// 填充默认值
+			$("#area-list").append(defaultOPtion);
+
+			if (parent == 0){
+				return;
+			}
+			$.post("/districts/",{parent:parent},function(json){
+				if (json.state == 200){
+					let list = json.data;
+					for (let i = 0; i < list.length; i++) {
+						let opt = "<option value='"+list[i].code+"'>"+list[i].name+"</option>";
+						$("#area-list").append(opt);
+					}
+				}else{
+					alert("区县信息加载失败")
+				}
+			});
+		});
+		$("#province-list").change(function (){
+			let parent = $("#province-list").val();
+
+			// 清空select下拉列表中的所有option元素
+			$("#city-list").empty();
+			$("#area-list").empty();
+			// 填充默认值
+			$("#city-list").append(defaultOPtion);
+			$("#area-list").append(defaultOPtion);
+
+			if (parent == 0){
+				return;
+			}
+			$.post("/districts/",{parent:parent},function(json){
+				if (json.state == 200){
+					let list = json.data;
+					for (let i = 0; i < list.length; i++) {
+						let opt = "<option value='"+list[i].code+"'>"+list[i].name+"</option>";
+						$("#city-list").append(opt);
+					}
+				}else{
+					alert("城市信息加载失败")
+				}
+			});
+		});
+		// 省的下拉列表数据展示
+		function showProvinceList(){
+			$.post("/districts/",{parent:86},function(json){
+				if (json.state == 200){
+					let list = json.data;
+					for (let i = 0; i < list.length; i++) {
+						let opt = "<option value='"+list[i].code+"'>"+list[i].name+"</option>";
+						$("#province-list").append(opt);
+					}
+				}else{
+					alert("省/直辖市信息加载失败")
+				}
+			});
+		}
 		$("#btn-add-new-address").click(function (){
 			$.post("/addresses/add_new_address",$("#form-add-new-address").serialize(),function (json){
 				if (json.state == 200){
 					alert("新增收货地址成功");
+					location.href = "address.html";
 				}else{
 					alert("新增地址失败");
 				}

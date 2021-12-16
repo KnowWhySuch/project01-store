@@ -28,7 +28,32 @@
            #{createdTime}, #{modifiedUser}, #{modifiedTime}
                  )
     </insert>
+
     <select id="countById" resultType="java.lang.Integer">
         select count(*) from t_address where uid = #{uid}
+    </select>
+    <select id="findByUid" resultMap="AddressEntityMap">
+        select * from t_address where uid = #{uid} order by is_default DESC ,created_time DESC
+    </select>
+
+    <select id="findByAid" resultType="com.cy.store.entity.Address">
+        select * from t_address where  aid = #{aid}
+    </select>
+
+    <update id="updateNonDefault">
+        update t_address set is_default = 0 where uid = #{uid}
+    </update>
+    <update id="updateDefaultByAid">
+        update t_address
+            set is_default = 1,modified_user = #{modifiedUser},modified_time = #{modifiedTime}
+            where aid = #{aid}
+    </update>
+
+    <delete id="deleteByAid">
+        delete from t_address where aid = #{aid};
+    </delete>
+
+    <select id="findLastModified" resultMap="AddressEntityMap">
+        select * from t_address where uid = #{uid} order by modified_time desc limit 0, 1
     </select>
 </mapper>

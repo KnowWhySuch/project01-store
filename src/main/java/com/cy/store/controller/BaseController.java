@@ -31,12 +31,21 @@ public class BaseController {
         }else if(e instanceof AddressCountLimitException){
             result.setState(4003);
             result.setMessage("用户的收货地址超出上限的异常");
+        }else if(e instanceof AddressNotFoundException){
+            result.setState(4004);
+            result.setMessage("用户的收货地址不存在异常");
+        }else if(e instanceof AccessDeniedException){
+            result.setState(4005);
+            result.setMessage("用户收货地址非法访问的异常");
         }else if(e instanceof PasswordNotMatchException){
             result.setState(5002);
             result.setMessage("用户名的密码错误的异常");
         } else if(e instanceof UpdateException){
             result.setState(5003);
             result.setMessage("更新数据时产生了未知的异常");
+        } else if(e instanceof DeleteException){
+            result.setState(5004);
+            result.setMessage("删除数据时产生了未知的异常");
         }else if(e instanceof FileEmptyException){
             result.setState(6000);
         }else if(e instanceof FileSizeException){

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 /**
  * Service层测试
  */
@@ -23,5 +25,23 @@ public class AddressServiceTests {
         address.setPhone("17677351612");
         address.setName("男朋友");
         iAddressService.addNewAddress(17,"管理员",address);
+    }
+
+    @Test
+    public void getByUid(){
+        List<Address> list = iAddressService.getByUid(17);
+        for (Address address : list) {
+            System.out.println(address);
+        }
+    }
+
+    @Test
+    public void setDefault(){
+        iAddressService.setDefault(11,17,"老婆");
+    }
+
+    @Test
+    public void delete(){
+        iAddressService.delete(11,17,"管理员");
     }
 }
