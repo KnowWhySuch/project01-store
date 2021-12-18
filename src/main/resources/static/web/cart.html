@@ -20,7 +20,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/top.css" />
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
 		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/cart.js" type="text/javascript" charset="utf-8"></script>
+<!--		<script src="../js/cart.js" type="text/javascript" charset="utf-8"></script>-->
 	</head>
 
 	<body>
@@ -268,12 +268,90 @@
 		</footer>
 		<!--页脚结束-->
 		<script type="text/javascript">
+
+
 			$(function() {
+
+				showCartList();
 				//返回链接
-				$(".link-account").click(function() {
-					location.href = "orderConfirm.html";
-				})
+				// $(".link-account").click(function() {
+				// 	location.href = "orderConfirm.html";
+				// })
 			})
+			// 展示购物车列表数据
+			function showCartList(){
+				// 清空tbody标签的数据
+				$("#cart-list").empty();
+				$.get("/carts/",function(json){
+					if (json.state == 200){
+						let list = json.data;
+						for (let i = 0; i < list.length; i++) {
+							let tr = '\t\t\t\t\t\t\t\t\t<tr>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t\t<input type="checkbox"  name="cids" value="#{cid}" class="ckitem" />\n' +
+									'\t\t\t\t\t\t\t\t\t\t</td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td><img src="..#{image}collect.png" class="img-responsive" /></td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td>#{title}#{msg}</td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td>¥<span id="goodsPrice#{cid}">#{singlePrice}</span></td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t\t<input id="price-#{cid}" type="button" value="-" class="num-btn" onclick="reduceNum(#{cid})" />\n' +
+									'\t\t\t\t\t\t\t\t\t\t\t<input id="goodsCount#{cid}" type="text" size="2" readonly="readonly" class="num-text" value="#{num}">\n' +
+									'\t\t\t\t\t\t\t\t\t\t\t<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(#{cid})" />\n' +
+									'\t\t\t\t\t\t\t\t\t\t</td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td><span id="goodsCast#{cid}">#{totalPrice}</span></td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t<td>\n' +
+									'\t\t\t\t\t\t\t\t\t\t\t<input type="button" onclick="delCartItem(this)" class="cart-del btn btn-default btn-xs" value="删除" />\n' +
+									'\t\t\t\t\t\t\t\t\t\t</td>\n' +
+									'\t\t\t\t\t\t\t\t\t</tr>';
+
+							tr = tr.replace(/#{cid}/g,list[i].cid);
+							tr = tr.replace(/#{image}/g,list[i].image);
+							tr = tr.replace(/#{title}/g,list[i].title);
+							tr = tr.replace(/#{msg}/g,list[i].realPrice);
+							tr = tr.replace(/#{num}/g,list[i].num);
+							tr = tr.replace(/#{singlePrice}/g,list[i].price);
+							tr = tr.replace(/#{totalPrice}/g,list[i].price * list[i].num);
+
+							$("#cart-list").append(tr);
+						}
+					}else{
+						alert("购物车列表加载异常")
+					}
+				});
+			}
+
+			function addNum(cid){
+				$.get("/carts/" + cid + "/num/add",{cid:cid},function (json){
+					if (json.state == 200){
+						if (json.data > 1){
+							$("#price-" + cid).attr("disabled",false)
+						}
+						$("#goodsCount" + cid).val(json.data);
+						let  price = $("#goodsPrice" + cid).html();
+						let totalPrice = price * json.data;
+						$("#goodsCast" + cid).html(totalPrice);
+					}else{
+						alert("增减商品数量失败");
+					}
+				});
+			}
+
+			function reduceNum(cid){
+				$.get("/carts/" + cid + "/num/reduce",{cid:cid},function (json){
+					if (json.state == 200){
+						if (json.data == 1 || json.data == 0){
+							$("#price-" + cid).attr("disabled",true)
+						}
+						$("#goodsCount" + cid).val(json.data);
+						let  price = $("#goodsPrice" + cid).html();
+						let totalPrice = price * json.data;
+						$("#goodsCast" + cid).html(totalPrice);
+
+					}else {
+						alert("增减商品数量失败");
+					}
+				});
+			}
 		</script>
 	</body>
 

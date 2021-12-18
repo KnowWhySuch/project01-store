@@ -21,7 +21,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
 		<link rel="stylesheet" type="text/css" href="../css/orderConfirm.css" />
 		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>
+<!--		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>-->
 	</head>
 
 	<body>
@@ -112,9 +112,7 @@
 				<div class="col-md-12">
 					<form id="form-create-order" role="form">
 						<div class="form-group">
-							<label for="name">
 								<p>选择收货地址：</p>
-							</label>
 							<select name="aid" id="address-list" class="form-control">
 								<option>八戒&nbsp;&nbsp;&nbsp;家&nbsp;&nbsp;&nbsp;北京市房山区高老庄3排6号&nbsp;&nbsp;&nbsp;1380***1234</option>
 								<option>八戒&nbsp;&nbsp;&nbsp;公司&nbsp;&nbsp;&nbsp;北京市海淀区中关村中路1号1001室&nbsp;&nbsp;&nbsp;1380***1234</option>
@@ -249,6 +247,81 @@
 
 		</footer>
 		<!--页脚结束-->
+
+
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				showAddressList();
+				showCartList();
+			});
+
+			function showCartList() {
+				$("#cart-list").empty();
+				$.ajax({
+					url: "/carts/list",
+					data: location.search.substr(1),
+					type: "GET",
+					dataType: "JSON",
+					success: function(json) {
+						let list = json.data;
+						console.log("count=" + list.length);
+						let allCount = 0;
+						let allPrice = 0;
+						for (let i = 0; i < list.length; i++) {
+							console.log(list[i].title);
+							let tr = '<tr>'
+									+ '<td><img src="..#{image}collect.png" class="img-responsive" /></td>'
+									+ '<td><input type="hidden" name="cids" value="#{cid}" />#{title}</td>'
+									+ '<td>¥<span>#{realPrice}</span></td>'
+									+ '<td>#{num}</td>'
+									+ '<td>¥<span>#{totalPrice}</span></td>'
+									+ '</tr>';
+
+							tr = tr.replace(/#{cid}/g, list[i].cid);
+							tr = tr.replace(/#{image}/g, list[i].image);
+							tr = tr.replace(/#{title}/g, list[i].title);
+							tr = tr.replace(/#{realPrice}/g, list[i].realPrice);
+							tr = tr.replace(/#{num}/g, list[i].num);
+							tr = tr.replace(/#{totalPrice}/g, list[i].realPrice * list[i].num);
+
+							$("#cart-list").append(tr);
+
+							allCount += list[i].num;
+							allPrice += list[i].realPrice * list[i].num;
+						}
+						$("#all-count").html(allCount);
+						$("#all-price").html(allPrice);
+					}
+				});
+			}
+
+			function showAddressList(){
+				$("#address-list").empty();
+				$.ajax({
+					url: "/addresses",
+					type: "GET",
+					dataType: "JSON",
+					success: function(json) {
+						let list = json.data;
+						for (let i = 0; i < list.length; i++) {
+							let opt = '<option value="#{aid}">#{name}&nbsp;&nbsp;&nbsp;#{tag}&nbsp;&nbsp;&nbsp;#{provinceName}#{cityName}#{areaName}#{address}&nbsp;&nbsp;&nbsp;#{phone}</option>\n';
+							opt = opt.replace(/#{aid}/g,list[i].aid);
+							opt = opt.replace(/#{name}/g,list[i].name);
+							opt = opt.replace(/#{tag}/g,list[i].tag);
+							opt = opt.replace(/#{provinceName}/g,list[i].provinceName);
+							opt = opt.replace(/#{cityName}/g,list[i].cityName);
+							opt = opt.replace(/#{areaName}/g,list[i].areaName);
+							opt = opt.replace(/#{address}/g,list[i].address);
+							opt = opt.replace(/#{phone}/g,list[i].phone);
+
+							$("#address-list").append(opt);
+
+						}
+					}
+				});
+			}
+		</script>
 	</body>
 
 </html>

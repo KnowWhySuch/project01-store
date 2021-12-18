@@ -291,6 +291,25 @@
 		</footer>
 		<!--页脚结束-->
 
+	<script>
+		$(function (){
+			$.get("/products/hot_list",function(json){
+				let lis = '';
+				for (let i = 0; i < json.data.length; i++) {
+					let product = json.data[i];
+					let li = '\t\t\t\t\t\t\t<div class="col-md-12">\n' +
+							'\t\t\t\t\t\t\t\t<div class="col-md-7 text-row-2"><a href="product.html?id='+product.id+'">'+product.title+'</a></div>\n' +
+							'\t\t\t\t\t\t\t\t<div class="col-md-2">'+product.price+'</div>\n' +
+							'\t\t\t\t\t\t\t\t<div class="col-md-3"><img src="..'+product.image+'collect.png" class="img-responsive" /></div>\n' +
+							'\t\t\t\t\t\t\t</div>'
+					lis += li;
+				}
+
+				$("#hot-list").html(lis)
+
+			})
+		});
+	</script>
 	</body>
 
 </html>
