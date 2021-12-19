@@ -54,7 +54,6 @@ public class CartController extends BaseController {
 
     @GetMapping("/list")
     public JsonResult<List<CartVO>> getVOByCid(HttpSession session,Integer[] cids){
-
         User user = (User) session.getAttribute("user");
         List<CartVO> data = iCartService.getVOByCid(user.getUid(), cids);
         return new JsonResult<>(OK,data);

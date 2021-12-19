@@ -256,6 +256,25 @@
 				showCartList();
 			});
 
+			$("#btn-create-order").click(function (){
+				console.log(1)
+				let aid = $("#address-list").val();
+				let cids = location.search.substr(1);
+				$.ajax({
+					url: "/orders/create",
+					data: "aid="+aid + "&" + cids,
+					type: "GET",
+					dataType: "JSON",
+					success: function(json) {
+						if (json.state == 200){
+							console.log(json.data)
+							alert("订单创建成功");
+							location.href = "payment.html";
+						}
+					}
+				});
+			});
+
 			function showCartList() {
 				$("#cart-list").empty();
 				$.ajax({
